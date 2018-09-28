@@ -68,7 +68,7 @@ def restaurant_menu(restaurant_id):
                     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet">
                 </head>
                 <body style="font-family: 'Open Sans', sans-serif; font-weight: 300; padding: 10px 20px;">
-                    <a href="/r" style="color: #0083a8; font-size: 20px; margin-bottom: 5px;">
+                    <a href="/" style="color: #0083a8; font-size: 20px; margin-bottom: 5px;">
                         Home
                     </a>
                     <h1>{name}</h1>
@@ -93,9 +93,14 @@ def restaurant_menu(restaurant_id):
             <span style="display: block; font-size: 16px; margin-bottom: 10px;">Price: {price}</span>
             <span style="display: block; font-size: 18px;">{description}</span>
             <a href="/restaurants/{restaurant_id}/{id}/edit_menu_item/"
-                style="display: inline-block; color: #0083a8; font-size: 18px; margin: 10px 0; text-decoration: none;"
+                style="display: inline-block; color: #0083a8; font-size: 18px; margin: 10px; text-decoration: none;"
             >
                 Edit
+            </a>
+            <a href="/restaurants/{restaurant_id}/{id}/delete_menu_item/"
+                style="display: inline-block; color: #0083a8; font-size: 18px; margin: 10px; text-decoration: none;"
+            >
+                Delete
             </a>
         </li>
         '''
@@ -297,9 +302,53 @@ def edit_menu_item(restaurant_id, menu_item_id):
 
 # Task 3: Create a route for deleteMenuItem function here
 
+@app.route('/restaurants/<int:restaurant_id>/<int:menu_item_id>/delete_menu_item/', methods=['GET', 'POST'])
+def delete_menu_item(restaurant_id, menu_item_id):
+    restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
+    menu_item = session.query(MenuItem).filter_by(id=menu_item_id).one()
+    if (request.method == 'POST'):
+        session.delete(menu_item)
+        session.commit()
 
-def delete_menu_item(restaurant_id, menu_id):
-    return "page to delete a menu item. Task 3 complete!"
+        return redirect('/restaurants/{restaurant_id}/'.format(restaurant_id=restaurant_id))
+    else:
+        page_html = '''
+                    <!DOCTYPE html>
+                    <html lang="en">
+                        <head>
+                            <meta charset="utf-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1">
+                            <title>Restaurants</title>
+                            <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet">
+                        </head>
+                        <body style="font-family: 'Open Sans', sans-serif; font-weight: 300; padding: 10px 20px;">
+                            <h1>{restaurant_name}</h1>
+                            <form style="margin-bottom: 10px;" method="POST" action="/restaurants/{restaurant_id}/{menu_item_id}/delete_menu_item/">
+                                <p>Delete {menu_item_name}?</p>
+                                <button
+                                    type="submit"
+                                    style="font-size: 16px;
+                                        margin: 10px;
+                                        background-color: red;
+                                        padding: 5px 10px;
+                                        border: 0;
+                                        border-radius: 3px;
+                                        color: white;
+                                        font-weight: 300;"
+                                >Delete</button>
+                            </form>
+                            <a style="color: #0083a8; margin: 5px; font-weight: 400;" href="/restaurants/{restaurant_id}/">
+                                Cancel
+                            </a>
+                        </body>
+                    </html>
+                '''
+        return page_html.format(
+            restaurant_id=restaurant_id,
+            restaurant_name=restaurant.name,
+            menu_item_id=menu_item_id,
+            menu_item_name=menu_item.name
+        )
 
 
 if __name__ == '__main__':
