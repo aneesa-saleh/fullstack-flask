@@ -200,28 +200,20 @@ def new_menu_item(restaurant_id):
 def edit_menu_item(restaurant_id, menu_item_id):
     restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
     menu_item = session.query(MenuItem).filter_by(id=menu_item_id).one()
-    print('before:', menu_item.name, menu_item.id)
-    print(request.method)
     if (request.method == 'POST'):
-        print('Im a post')
         name = request.form['name']
         price = request.form['price']
         description = request.form['description']
         form_complete = bool(name) & bool(price) & bool(description)
-        print('pre-after:', menu_item.name, menu_item.id)
         if (form_complete):
             menu_item.name = name
             menu_item.price = price
             menu_item.description = description
-            print('after:')
-            print(menu_item.name, menu_item.id)
-            #session.add(menu_item)
-            #session.commit()
-        else:
-            print('nope')
+            session.add(menu_item)
+            session.commit()
+
         return redirect('/restaurants/{restaurant_id}/'.format(restaurant_id=restaurant_id))
     else:
-        print('Im a get')
         page_html = '''
                 <!DOCTYPE html>
                 <html lang="en">
