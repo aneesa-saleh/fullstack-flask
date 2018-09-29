@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect
+from flask import Flask, request, redirect, render_template
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Restaurant, MenuItem
@@ -58,58 +58,7 @@ def home_page():
 def restaurant_menu(restaurant_id):
     restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
     items = session.query(MenuItem).filter_by(restaurant_id=restaurant.id)
-    page_html = '''
-            <!DOCTYPE html>
-            <html lang="en">
-                <head>
-                    <meta charset="utf-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1">
-                    <title>Restaurants</title>
-                    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet">
-                </head>
-                <body style="font-family: 'Open Sans', sans-serif; font-weight: 300; padding: 10px 20px;">
-                    <a href="/" style="color: #0083a8; font-size: 20px; margin-bottom: 5px;">
-                        Home
-                    </a>
-                    <h1>{name}</h1>
-                    <a href="/restaurants/{restaurant_id}/new_menu_item/" style="color: #0083a8; font-size: 20px; margin-bottom: 5px;">
-                        Add menu item
-                    </a>
-                    <ul style="padding: 0;">
-                        {menu}
-                    </ul>
-                </body>
-            </html>
-        '''
-    menu_item_html = '''
-        <li style="
-            list-style-type: none;
-            margin: 20px 0;
-            box-shadow: 0 0 5px 0 rgba(17,21,0,.2), 0 4px 8px 0 rgba(17,22,0,0.01), 0 8px 50px 0 rgba(17,22,0,.01);
-            border-radius: 3px;
-            padding: 20px 10px;"
-        >
-            <span style="display: block; font-weight: 400; font-size: 22px; margin-bottom: 10px;">{name}</span>
-            <span style="display: block; font-size: 16px; margin-bottom: 10px;">Price: {price}</span>
-            <span style="display: block; font-size: 18px;">{description}</span>
-            <a href="/restaurants/{restaurant_id}/{id}/edit_menu_item/"
-                style="display: inline-block; color: #0083a8; font-size: 18px; margin: 10px; text-decoration: none;"
-            >
-                Edit
-            </a>
-            <a href="/restaurants/{restaurant_id}/{id}/delete_menu_item/"
-                style="display: inline-block; color: #0083a8; font-size: 18px; margin: 10px; text-decoration: none;"
-            >
-                Delete
-            </a>
-        </li>
-        '''
-    menu_html = ''.join(
-        menu_item_html.format(name=item.name, price=item.price, description=item.description, id=item.id, restaurant_id=restaurant_id)
-        for item in items
-    )
-    return page_html.format(name=restaurant.name, menu=menu_html, restaurant_id=restaurant_id)
-
+    return render_template('menu.html', restaurant=restaurant, items=items)
 
 # Task 1: Create route for newMenuItem function here
 
