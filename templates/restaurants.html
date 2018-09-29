@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Restaurants</title>
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet">
+    </head>
+    <body style="font-family: 'Open Sans', sans-serif; font-weight: 300; padding: 10px 20px;">
+        <h1>Restaurants</h1>
+        <ul style="padding: 0;">
+            {% for restaurant in restaurants %}
+
+                <li style="
+                    list-style-type: none;
+                    margin: 20px 0;
+                    box-shadow: 0 0 5px 0 rgba(17,21,0,.2), 0 4px 8px 0 rgba(17,22,0,0.01), 0 8px 50px 0 rgba(17,22,0,.01);
+                    border-radius: 3px;
+                    padding: 20px 10px;"
+                >
+                    <a href="{{url_for('restaurant_menu', restaurant_id=restaurant.id)}}" style="color: #0083a8; font-size: 20px; margin-bottom: 5px; text-decoration: none;">
+                        {{restaurant.name}}
+                    </a>
+                </li>
+
+            {% endfor %}
+        </ul>
+    </body>
+</html>

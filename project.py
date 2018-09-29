@@ -14,45 +14,8 @@ session = DBSession()
 
 @app.route('/')
 def home_page():
-    page_html = '''
-        <!DOCTYPE html>
-        <html lang="en">
-            <head>
-                <meta charset="utf-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1">
-                <title>Restaurants</title>
-                <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet">
-            </head>
-            <body style="font-family: 'Open Sans', sans-serif; font-weight: 300; padding: 10px 20px;">
-                <h1>Restaurants</h1>
-                <ul style="padding: 0;">
-                    {restaurants}
-                </ul>
-            </body>
-        </html>
-    '''
-
-    restaurant_html = '''
-        <li style="
-            list-style-type: none;
-            margin: 20px 0;
-            box-shadow: 0 0 5px 0 rgba(17,21,0,.2), 0 4px 8px 0 rgba(17,22,0,0.01), 0 8px 50px 0 rgba(17,22,0,.01);
-            border-radius: 3px;
-            padding: 20px 10px;"
-        >
-            <a href="/restaurants/{restaurant_id}/" style="color: #0083a8; font-size: 20px; margin-bottom: 5px; text-decoration: none;">
-                {restaurant_name}
-            </a>
-        </li>
-    '''
-
     restaurants = session.query(Restaurant).all()
-    restaurants_html = "".join(
-        restaurant_html.format(restaurant_name=restaurant.name, restaurant_id=restaurant.id) for restaurant in
-        restaurants
-    )
-    return page_html.format(restaurants=restaurants_html)
-
+    return render_template('restaurants.html', restaurants=restaurants)
 
 @app.route('/restaurants/<int:restaurant_id>/')
 def restaurant_menu(restaurant_id):
@@ -94,7 +57,7 @@ def edit_menu_item(restaurant_id, menu_item_id):
             session.add(menu_item)
             session.commit()
 
-        return redirect('/restaurants/{restaurant_id}/'.format(restaurant_id=restaurant_id))
+        return redirect(url_for('restaurant_menu', restaurant_id=restaurant_id))
     else:
         return render_template('edit_menu_item.html', restaurant=restaurant, menu_item=menu_item)
 
