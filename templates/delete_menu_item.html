@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Restaurants</title>
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet">
+    </head>
+    <body style="font-family: 'Open Sans', sans-serif; font-weight: 300; padding: 10px 20px;">
+        <h1>{{restaurant.name}}</h1>
+        <form style="margin-bottom: 10px;" method="POST" action="{{url_for('delete_menu_item', restaurant_id=restaurant.id, menu_item_id=menu_item.id)}}">
+            <p>Delete {{menu_item.name}} from the menu?</p>
+            <button
+                type="submit"
+                style="font-size: 16px;
+                    margin: 10px;
+                    background-color: red;
+                    padding: 5px 10px;
+                    border: 0;
+                    border-radius: 3px;
+                    color: white;
+                    font-weight: 300;"
+            >Delete</button>
+        </form>
+        <a style="color: #0083a8; margin: 5px; font-weight: 400;" href="{{url_for('restaurant_menu', restaurant_id=restaurant.id)}}">
+            Cancel
+        </a>
+    </body>
+</html>

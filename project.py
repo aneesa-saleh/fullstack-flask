@@ -107,45 +107,9 @@ def delete_menu_item(restaurant_id, menu_item_id):
         session.delete(menu_item)
         session.commit()
 
-        return redirect('/restaurants/{restaurant_id}/'.format(restaurant_id=restaurant_id))
+        return redirect(url_for('restaurant_menu', restaurant_id=restaurant.id))
     else:
-        page_html = '''
-                    <!DOCTYPE html>
-                    <html lang="en">
-                        <head>
-                            <meta charset="utf-8">
-                            <meta name="viewport" content="width=device-width, initial-scale=1">
-                            <title>Restaurants</title>
-                            <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet">
-                        </head>
-                        <body style="font-family: 'Open Sans', sans-serif; font-weight: 300; padding: 10px 20px;">
-                            <h1>{restaurant_name}</h1>
-                            <form style="margin-bottom: 10px;" method="POST" action="/restaurants/{restaurant_id}/{menu_item_id}/delete_menu_item/">
-                                <p>Delete {menu_item_name}?</p>
-                                <button
-                                    type="submit"
-                                    style="font-size: 16px;
-                                        margin: 10px;
-                                        background-color: red;
-                                        padding: 5px 10px;
-                                        border: 0;
-                                        border-radius: 3px;
-                                        color: white;
-                                        font-weight: 300;"
-                                >Delete</button>
-                            </form>
-                            <a style="color: #0083a8; margin: 5px; font-weight: 400;" href="/restaurants/{restaurant_id}/">
-                                Cancel
-                            </a>
-                        </body>
-                    </html>
-                '''
-        return page_html.format(
-            restaurant_id=restaurant_id,
-            restaurant_name=restaurant.name,
-            menu_item_id=menu_item_id,
-            menu_item_name=menu_item.name
-        )
+        return render_template('delete_menu_item.html', restaurant=restaurant, menu_item=menu_item)
 
 
 if __name__ == '__main__':
