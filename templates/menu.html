@@ -12,6 +12,41 @@
             Home
         </a>
         <h1>{{restaurant.name}}</h1>
+
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                <ul style="padding: 0;">
+                    {% for message in messages %}
+                        {% if message[0] == 'error' %}
+                            <li style="
+                                width: fit-content;
+                                list-style-type: none;
+                                padding: 10px;
+                                margin-bottom: 10px;
+                                background-color: #991e1e;
+                                color: white;
+                                border-radius: 3px"
+                            >
+                                &#9888; {{message[1]}}
+                            </li>
+                        {% else %}
+                            <li style="
+                                width: fit-content;
+                                list-style-type: none;
+                                padding: 10px;
+                                margin-bottom: 10px;
+                                background-color: #186060;
+                                color: white;
+                                border-radius: 3px"
+                            >
+                                &#10003; {{message[1]}}
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
         <a href="{{url_for('new_menu_item', restaurant_id=restaurant.id)}}" style="color: #0083a8; font-size: 20px; margin-bottom: 5px;">
             Add menu item
         </a>
